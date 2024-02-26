@@ -1,8 +1,11 @@
 from django.urls import path, re_path
+from django.views.generic import RedirectView
+
 from . import views
 
 urlpatterns = [
-    path('', views.task_list, name='task_list'),
+    path('', RedirectView.as_view(url='login/')),
+    path('task/', views.task_list, name='task_list'),
     path('task/create/', views.task_create, name='task_create'),
     re_path(r'^tasks/(?P<task_id>\d+)/edit/$', views.task_edit, name='task_edit'),
     re_path(r'^tasks/(?P<task_id>\d+)/delete/$', views.task_delete, name='task_delete'),

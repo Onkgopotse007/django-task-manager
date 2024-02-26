@@ -15,7 +15,7 @@ def signup_view(request):
             return redirect('task_list')
     else:
         form = UserCreationForm()
-    return render(request, 'signup.html.html', {'form': form})
+    return render(request, 'auth/signup.html', {'form': form})
 
 
 def login_view(request):
@@ -27,7 +27,7 @@ def login_view(request):
             return redirect('task_list')
     else:
         form = AuthenticationForm()
-    return render(request, 'login.html', {'form': form})
+    return render(request, 'auth/login.html', {'form': form})
 
 
 def logout_view(request):
@@ -38,7 +38,7 @@ def logout_view(request):
 
 def task_list(request):
     tasks = Task.objects.filter(user=request.user)
-    return render(request, 'task_list.html', {'tasks': tasks})
+    return render(request, 'tasks/task_list.html', {'tasks': tasks})
 
 
 def task_create(request):
@@ -51,7 +51,7 @@ def task_create(request):
             return redirect('task_list')
     else:
         form = TaskForm()
-    return render(request, 'task_form.html', {'form': form})
+    return render(request, 'tasks/task_form.html', {'form': form})
 
 
 def task_edit(request, task_id):
@@ -63,7 +63,7 @@ def task_edit(request, task_id):
             return redirect('task_list')
     else:
         form = TaskForm(instance=task)
-    return render(request, 'task_form.html', {'form': form})
+    return render(request, 'tasks/task_form.html', {'form': form})
 
 
 def task_delete(request, task_id):
@@ -71,31 +71,24 @@ def task_delete(request, task_id):
     if request.method == 'POST':
         task.delete()
         return redirect('task_list')
-    return render(request, 'task_confirm_delete.html', {'task': task})
+    return render(request, 'tasks/task_confirm_delete.html', {'task': task})
 
 
 def task_listboard(request):
-    # Retrieve all users for the dropdown menu
-    all_users = User.objects.all()
 
     # Retrieve tasks for the current user
     tasks = Task.objects.filter(user=request.user)
 
-    # Apply user filtering
-    user_filter = request.GET.get('user')
-    if user_filter and user_filter.isdigit():
-        tasks = tasks.filter(user_id=user_filter)
-
     # Sorting
     sort_by = request.GET.get('sort_by')
     if sort_by == 'name':
-        tasks = tasks.order_by('name')
+        tasks = tasks.order_by('title')
     elif sort_by == 'due_date':
         tasks = tasks.order_by('due_date')
 
     # Filtering by completion status
-    completion_filter = request.GET.get('completion')
+    completion_filter = request.GET.get('status')
     if completion_filter in ['true', 'false']:
-        tasks = tasks.filter(completion=(completion_filter == 'true'))
+        tasks = tasks.filter(status=(completion_filter == 'true'))
 
-    return render(request, 'task_listboard.html', {'tasks': tasks, 'all_users': all_users})
+    return render(request, 'tasks/task_listboard.html', {'tasks': tasks})

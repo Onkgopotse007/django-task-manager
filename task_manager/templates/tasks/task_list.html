@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    - Task List
+{% endblock %}
+
+{% block content %}
+    <h1>All my tasks</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Due Date</th>
+                <th>Completion</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                <td>{{ task.title }}</td>
+                <td>{{ task.due_date }}</td>
+                <td>{{ task.status }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

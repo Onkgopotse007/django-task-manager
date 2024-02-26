@@ -8,7 +8,7 @@ class Task(models.Model):
     description = models.TextField()
     priority = models.CharField(max_length=20)
     due_date = models.DateField()
-    status = models.CharField(max_length=20)
+    status = models.BooleanField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
